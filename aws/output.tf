@@ -11,3 +11,7 @@ output "public_route_table_ids" {
 output "public_instance_ip" {
   value = ["${aws_instance.csserver.public_ip}"]
 }
+output "cservip" {
+  value = ["${aws_eip.cs_eip.public_ip}"]
+  
+}

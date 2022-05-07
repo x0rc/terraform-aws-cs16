@@ -35,7 +35,7 @@ variable "instance_ami" {
 }
 variable "instance_type" {
   description = "type for aws EC2 instance"
-  default = "t3.micro"
+  default = "t2.micro"
 }
 variable "environment_tag" {
   description = "Environment tag"

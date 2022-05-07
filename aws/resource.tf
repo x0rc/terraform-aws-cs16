@@ -1,4 +1,4 @@
-#providers
+# providers
 provider "aws" {
   access_key = var.access_key
   secret_key = var.secret_key
@@ -89,8 +89,24 @@ resource "aws_key_pair" "ec2key" {
   public_key = file(var.public_key_path)
 }
 
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
+}
+
 resource "aws_instance" "csserver" {
-  ami             = var.instance_ami
+  ami             = data.aws_ami.ubuntu.id
   instance_type   = var.instance_type
   subnet_id       = aws_subnet.subnet_public.id
   security_groups = [aws_security_group.sg_cs_2020.id]
@@ -104,7 +120,7 @@ resource "aws_instance" "csserver" {
     inline = [
       "sudo apt-get update",
       "sudo apt-get install -y docker.io",
-      "sudo   docker run -d -p 26900:26900/udp -p 27020:27020/udp -p 27015:27015/udp -p 27015:27015 -e MAXPLAYERS=32 -e START_MAP=de_dust2 -e SERVER_NAME='cop cs server' -e START_MONEY=800 -e BUY_TIME=0.25 -e FRIENDLY_FIRE=1 -e ADMIN_STEAM=0:1:1234566 -e SERVER_PASSWORD=cop123 -e RCON_PASSWORD=awesome --name cs cs16ds/server:latest +log"
+      "sudo   docker run -d -p 26900:26900/udp -p 27020:27020/udp -p 27015:27015/udp -p 27015:27015 -e MAXPLAYERS=32 -e START_MAP=de_dust2 -e SERVER_NAME='IWConnect Warzone' -e START_MONEY=800 -e BUY_TIME=0.25 -e FRIENDLY_FIRE=1 -e ADMIN_STEAM=0:0:60330921 -e RCON_PASSWORD=sup3rstr0ngpa55 --name cs cs16ds/server:latest +log"
     ]
   }
 
@@ -135,3 +151,5 @@ resource "aws_route_table_association" "subnet_association" {
   subnet_id      = aws_subnet.subnet_public.id
   route_table_id = aws_route_table.route_table_public.id
 }
+
+

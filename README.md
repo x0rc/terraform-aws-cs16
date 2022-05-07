@@ -18,8 +18,6 @@ secret_key = "your secret key"
 region       = "eu-central-1"
 instance_type       = "t2.micro"
 availability_zone = "eu-central-1a"
-# check if the AMI is available in the region
-instance_ami = "ami-01c54eee4ab8725c0"
 ```
 
 
